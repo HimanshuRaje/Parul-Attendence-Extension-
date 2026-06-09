@@ -23,3 +23,5 @@ One-click attendance checker for Parul University UMS.
 - Your credentials are stored **locally on your device only** — never sent anywhere
 - If the site asks for a CAPTCHA, you'll need to solve it manually (nothing can bypass that)
 - If something breaks after a UMS update, just message me and I'll fix the script
+
+### Created with ❤️ by Himanshu Raje 💻
