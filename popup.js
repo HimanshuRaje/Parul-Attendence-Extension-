@@ -34,7 +34,7 @@ saveBtn.addEventListener('click', () => {
   chrome.storage.local.set({ pu_user: user, pu_pass: pass }, () => {
     savedBadge.style.display = 'inline-block';
     setStatus('Credentials saved!', 'success');
-    setTimeout(() => setStatus(''), 2000);
+    setTimeout(() => setStatus(''), 1500);
   });
 });
 
