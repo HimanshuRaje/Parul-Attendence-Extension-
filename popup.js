@@ -54,32 +54,34 @@ goBtn.addEventListener('click', async () => {
   // Save latest credentials
   chrome.storage.local.set({ pu_user: user, pu_pass: pass });
 
-  // Check if UMS tab already open
-  chrome.tabs.query({ url: 'https://ums.paruluniversity.ac.in/*' }, (tabs) => {
-    if (tabs.length > 0) {
-      // Use existing tab
-      chrome.tabs.update(tabs[0].id, { active: true });
-      chrome.scripting.executeScript({
-        target: { tabId: tabs[0].id },
-        func: startAutomation,
-        args: [user, pass]
-      });
-    } else {
-      // Open new tab
-      chrome.tabs.create({ url: 'https://ums.paruluniversity.ac.in/Login.aspx' }, (tab) => {
-        // Wait for tab to load then run script
-        chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
-          if (tabId === tab.id && info.status === 'complete') {
-            chrome.tabs.onUpdated.removeListener(listener);
-            chrome.scripting.executeScript({
-              target: { tabId: tab.id },
-              func: startAutomation,
-              args: [user, pass]
-            });
-          }
-        });
-      });
+  // Get current active tab
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length === 0) {
+      setStatus('No active tab found.', 'error');
+      goBtn.disabled = false;
+      return;
     }
+
+    const activeTab = tabs[0];
+
+    // Listen for tab load completion
+    const listener = (tabId, info) => {
+      if (tabId === activeTab.id && info.status === 'complete') {
+        chrome.tabs.onUpdated.removeListener(listener);
+        // Delay of 2 seconds before starting the login process
+        setTimeout(() => {
+          chrome.scripting.executeScript({
+            target: { tabId: activeTab.id },
+            func: startAutomation,
+            args: [user, pass]
+          });
+        }, 2000);
+      }
+    };
+    chrome.tabs.onUpdated.addListener(listener);
+
+    // Redirect active tab to UMS login page
+    chrome.tabs.update(activeTab.id, { url: 'https://ums.paruluniversity.ac.in/Login.aspx' });
   });
 
   setStatus('Automating... check the tab!', 'info');
@@ -105,7 +107,7 @@ if (togglePasswordBtn && eyeIcon) {
     const isPassword = passwordInput.getAttribute('type') === 'password';
     passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
     passwordInput.classList.toggle('pw-visible', isPassword);
-    
+
     if (isPassword) {
       // Switch to eye-off SVG icon
       eyeIcon.innerHTML = `
