@@ -49,6 +49,38 @@
       position: relative;
     }
 
+    /* GitHub Credits Link */
+    .github-credits {
+      position: absolute;
+      top: -10px;
+      right: -5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(4px);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .github-credits:hover {
+      color: var(--text-main);
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.25);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+      transform: translateY(-0.5px);
+    }
+
+    .github-credits svg {
+      opacity: 0.8;
+    }
+
     /* Header */
     .header {
       text-align: center;
@@ -94,6 +126,7 @@
       letter-spacing: -0.2px;
       background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
@@ -356,6 +389,12 @@
 <body>
 
   <div class="glow-container">
+    <a href="https://github.com/HimanshuRaje/Parul-Attendence-Extension" target="_blank" class="github-credits" title="GitHub Project by Himanshu Jagtap">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+      </svg>
+      <span>Himanshu Jagtap</span>
+    </a>
     <div class="header">
       <div class="logo-container">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
