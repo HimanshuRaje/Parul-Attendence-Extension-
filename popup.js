@@ -6,7 +6,7 @@ const statusEl = document.getElementById('status');
 const savedBadge = document.getElementById('savedBadge');
 
 function setStatus(msg, type = '') {
-  statusEl.textContent = msg;
+  statusEl.innerHTML = msg;
   statusEl.className = 'status ' + type;
 }
 
@@ -54,6 +54,31 @@ goBtn.addEventListener('click', async () => {
   // Save latest credentials
   chrome.storage.local.set({ pu_user: user, pu_pass: pass });
 
+  const originalBtnContent = goBtn.innerHTML;
+  let fallbackTimeout;
+  let tabListener;
+
+  const triggerSuccess = () => {
+    if (fallbackTimeout) clearTimeout(fallbackTimeout);
+    goBtn.disabled = false;
+    goBtn.innerHTML = originalBtnContent;
+    setStatus('');
+
+    // Show full-screen success overlay
+    const successOverlay = document.getElementById('successOverlay');
+    if (successOverlay) {
+      successOverlay.classList.add('active');
+    }
+
+    // Fade out body and close window
+    setTimeout(() => {
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.close();
+      }, 400); // Wait for the fade-out transition (0.4s) to complete
+    }, 2000); // Show overlay for 2s
+  };
+
   // Get current active tab
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length === 0) {
@@ -65,30 +90,33 @@ goBtn.addEventListener('click', async () => {
     const activeTab = tabs[0];
 
     // Listen for tab load completion
-    const listener = (tabId, info) => {
+    tabListener = (tabId, info) => {
       if (tabId === activeTab.id && info.status === 'complete') {
-        chrome.tabs.onUpdated.removeListener(listener);
-        // Delay of 2 seconds before starting the login process
-        setTimeout(() => {
-          chrome.scripting.executeScript({
-            target: { tabId: activeTab.id },
-            func: startAutomation,
-            args: [user, pass]
-          });
-        }, 2000);
+        chrome.tabs.onUpdated.removeListener(tabListener);
+        chrome.scripting.executeScript({
+          target: { tabId: activeTab.id },
+          func: startAutomation,
+          args: [user, pass]
+        }, () => {
+          triggerSuccess();
+        });
       }
     };
-    chrome.tabs.onUpdated.addListener(listener);
+    chrome.tabs.onUpdated.addListener(tabListener);
+
+    // Fallback timeout in case page fails to load or script injection is blocked
+    fallbackTimeout = setTimeout(() => {
+      chrome.tabs.onUpdated.removeListener(tabListener);
+      goBtn.disabled = false;
+      goBtn.innerHTML = originalBtnContent;
+      setStatus('Connection timed out. Please try again.', 'error');
+    }, 10000);
 
     // Redirect active tab to UMS login page
     chrome.tabs.update(activeTab.id, { url: 'https://ums.paruluniversity.ac.in/Login.aspx' });
   });
 
-  setStatus('Automating... check the tab!', 'info');
-  setTimeout(() => {
-    goBtn.disabled = false;
-    setStatus('');
-  }, 5000);
+  setStatus('Automating... DON\'T LEAVE THE TAB!!!', 'info');
 });
 
 // This function runs inside the UMS tab

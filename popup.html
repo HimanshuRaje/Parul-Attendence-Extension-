@@ -379,14 +379,77 @@
       border-color: rgba(59, 130, 246, 0.15);
     }
 
+    /* Success Overlay */
+    .success-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15), transparent 60%), #08090d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .success-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .success-overlay svg {
+      color: var(--success);
+      filter: drop-shadow(0 0 15px var(--success-glow));
+      animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .success-overlay h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+      padding: 0 20px;
+      line-height: 1.4;
+    }
+
+    /* Body Fade Out */
+    body.fade-out {
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+    }
+
     /* Animations */
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
+
+    @keyframes scaleIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
+
+  <div class="success-overlay" id="successOverlay">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <h2>Successfully Initiated Automation Sequence!!</h2>
+  </div>
 
   <div class="glow-container">
     <a href="https://github.com/HimanshuRaje/Parul-Attendence-Extension" target="_blank" class="github-credits" title="GitHub Project by Himanshu Jagtap">
