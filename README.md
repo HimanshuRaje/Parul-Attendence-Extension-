@@ -2,6 +2,8 @@
 
 One-click attendance checker for Parul University UMS.
 
+Asynchronous architecture that allows user to leave the task running if they want after sucessfully starting of automation.
+
 ## How to Install (2 minutes)
 
 1. Open Chrome and go to: `chrome://extensions`

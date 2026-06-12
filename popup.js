@@ -4,6 +4,7 @@ const saveBtn = document.getElementById('saveBtn');
 const goBtn = document.getElementById('goBtn');
 const statusEl = document.getElementById('status');
 const savedBadge = document.getElementById('savedBadge');
+const clearBtn = document.getElementById('clearBtn');
 
 function setStatus(msg, type = '') {
   statusEl.innerHTML = msg;
@@ -34,6 +35,17 @@ saveBtn.addEventListener('click', () => {
   chrome.storage.local.set({ pu_user: user, pu_pass: pass }, () => {
     savedBadge.style.display = 'inline-block';
     setStatus('Credentials saved!', 'success');
+    setTimeout(() => setStatus(''), 1500);
+  });
+});
+
+// Clear credentials
+clearBtn.addEventListener('click', () => {
+  chrome.storage.local.remove(['pu_user', 'pu_pass'], () => {
+    usernameInput.value = '';
+    passwordInput.value = '';
+    savedBadge.style.display = 'none';
+    setStatus('Credential history cleared.', 'success');
     setTimeout(() => setStatus(''), 1500);
   });
 });
